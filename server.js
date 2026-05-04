@@ -10,6 +10,16 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
+const getGeminiApiKey = () => {
+  const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || '';
+  return key.trim().replace(/^["']|["']$/g, '');
+};
+const getGeminiKeyName = () => {
+  if (process.env.GEMINI_API_KEY) return 'GEMINI_API_KEY';
+  if (process.env.GOOGLE_API_KEY) return 'GOOGLE_API_KEY';
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) return 'GOOGLE_GENERATIVE_AI_API_KEY';
+  return null;
+};
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 8 * 1024 * 1024 },
@@ -44,10 +54,13 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/health', (req, res) => {
+  const geminiApiKey = getGeminiApiKey();
+
   res.json({
     ok: true,
     service: 'Vision AI Studio',
-    geminiConfigured: Boolean(process.env.GEMINI_API_KEY),
+    geminiConfigured: Boolean(geminiApiKey),
+    geminiKeyName: getGeminiKeyName(),
     nodeEnv: process.env.NODE_ENV || 'development',
   });
 });
@@ -60,9 +73,11 @@ app.get('/api/features', (req, res) => {
 
 app.post('/api/analyze', upload.array('images', 5), async (req, res) => {
   try {
-    if (!process.env.GEMINI_API_KEY) {
+    const geminiApiKey = getGeminiApiKey();
+
+    if (!geminiApiKey) {
       return res.status(500).json({
-        error: 'Gemini API key is not configured. Add GEMINI_API_KEY in Render Environment Variables, then redeploy the service.',
+        error: 'Gemini API key is not configured. Add GEMINI_API_KEY in Render Environment Variables, save changes, then redeploy the service.',
       });
     }
 
@@ -82,7 +97,7 @@ app.post('/api/analyze', upload.array('images', 5), async (req, res) => {
       'Use clear headings, bullet points, and practical recommendations.',
       userPrompt ? `Additional user instruction: ${userPrompt}` : '',
     ].filter(Boolean).join('\n');
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const genAI = new GoogleGenerativeAI(geminiApiKey);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const result = await model.generateContent([
