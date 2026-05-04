@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
-const geminiModelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const geminiModelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash-8b';
 const getGeminiApiKey = () => {
   const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || '';
   return key.trim().replace(/^["']|["']$/g, '');
@@ -126,7 +126,15 @@ app.post('/api/analyze', upload.array('images', 5), async (req, res) => {
 
     res.json({ analysis: result.response.text(), feature, imageCount: req.files.length });
   } catch (error) {
-    res.status(500).json({ error: error.message || 'Image analysis failed' });
+    const message = error.message || 'Image analysis failed';
+
+    if (message.includes('429') || message.toLowerCase().includes('quota')) {
+      return res.status(429).json({
+        error: 'Gemini quota/rate limit exceeded. Wait for quota reset, enable billing in Google AI Studio, or use another API key/project with available quota.',
+      });
+    }
+
+    res.status(500).json({ error: message });
   }
 });
 
