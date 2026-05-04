@@ -44,7 +44,12 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/health', (req, res) => {
-  res.json({ ok: true, service: 'Vision AI Studio' });
+  res.json({
+    ok: true,
+    service: 'Vision AI Studio',
+    geminiConfigured: Boolean(process.env.GEMINI_API_KEY),
+    nodeEnv: process.env.NODE_ENV || 'development',
+  });
 });
 
 app.get('/api/features', (req, res) => {
