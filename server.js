@@ -56,7 +56,9 @@ app.get('/api/features', (req, res) => {
 app.post('/api/analyze', upload.array('images', 5), async (req, res) => {
   try {
     if (!process.env.GEMINI_API_KEY) {
-      return res.status(500).json({ error: 'GEMINI_API_KEY is not configured' });
+      return res.status(500).json({
+        error: 'Gemini API key is not configured. Add GEMINI_API_KEY in Render Environment Variables, then redeploy the service.',
+      });
     }
 
     if (!req.files?.length) {
