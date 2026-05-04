@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vision AI Studio</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="badge">Powered by Gemini Vision</div>
+        <h1>Vision AI Studio</h1>
+        <p>Analyze images, documents, ads, products, screenshots, reports, and creatives with specialized AI tools.</p>
+      </section>
+
+      <section class="stats">
+        <div><strong>15</strong><span>AI Modes</span></div>
+        <div><strong>5</strong><span>Images per run</span></div>
+        <div><strong>OCR</strong><span>Text extraction</span></div>
+        <div><strong>Gemini</strong><span>API powered</span></div>
+      </section>
+
+      <section class="card">
+        <form id="analyzeForm">
+          <div class="sectionTitle">
+            <span>Step 1</span>
+            <h2>Select feature</h2>
+          </div>
+
+          <div class="features" id="featureGrid">
+            <label class="feature active">
+              <input type="radio" name="feature" value="full" checked />
+              <strong>Full Vision Report</strong>
+              <small>Complete image, text, quality, risks, and action report.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="ocr" />
+              <strong>OCR Text Extractor</strong>
+              <small>Extract headings, tables, labels, numbers, and readable text.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="document" />
+              <strong>Document Analyzer</strong>
+              <small>Summarize screenshots, PDFs-as-images, forms, and reports.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="product" />
+              <strong>Product Insight</strong>
+              <small>Find audience, positioning, strengths, and improvements.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="creative" />
+              <strong>Ad & Creative Audit</strong>
+              <small>Review composition, CTA, typography, hierarchy, and conversion.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="social" />
+              <strong>Social Media Kit</strong>
+              <small>Generate captions, hooks, hashtags, and platform ideas.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="quality" />
+              <strong>Quality & Compliance</strong>
+              <small>Check blur, lighting, cropping, readability, and safety risk.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="comparison" />
+              <strong>Multi Image Compare</strong>
+              <small>Compare images and recommend the best option.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="roadmap" />
+              <strong>Roadmap Extractor</strong>
+              <small>Convert visual notes into features, modules, and future plan.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="video" />
+              <strong>Video Frame Analysis</strong>
+              <small>Review uploaded frames for motion clues, quality, and key moments.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="webcam" />
+              <strong>Real-Time Webcam Mode</strong>
+              <small>Plan live camera monitoring, alerts, and real-time scene insights.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="finetune" />
+              <strong>Custom Model Fine-Tuning</strong>
+              <small>Create dataset, labels, metrics, and deployment plan.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="mobile" />
+              <strong>Mobile App Plan</strong>
+              <small>Convert image workflow into a React Native app roadmap.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="automation" />
+              <strong>Zapier / Make Integration</strong>
+              <small>Design triggers, actions, webhooks, and business automations.</small>
+            </label>
+            <label class="feature">
+              <input type="radio" name="feature" value="whitelabel" />
+              <strong>White-Label Portal</strong>
+              <small>Plan reseller portal, tenants, billing, branding, and user roles.</small>
+            </label>
+          </div>
+
+          <div class="sectionTitle">
+            <span>Step 2</span>
+            <h2>Upload and customize</h2>
+          </div>
+
+          <div class="workspace">
+            <label class="dropzone" for="imageInput">
+              <input id="imageInput" name="images" type="file" accept="image/*" multiple required />
+              <span class="dropIcon">↑</span>
+              <strong>Choose images</strong>
+              <small>Upload up to 5 images, 8MB each</small>
+            </label>
+
+            <div class="previewWrap" id="previewWrap">
+              <div class="previewGrid" id="previewGrid"></div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <label>
+              <span>Language</span>
+              <select name="language" id="language">
+                <option>English</option>
+                <option>Hindi</option>
+                <option>Hinglish</option>
+                <option>Spanish</option>
+                <option>French</option>
+              </select>
+            </label>
+            <label>
+              <span>Audience</span>
+              <select name="audience" id="audience">
+                <option>General</option>
+                <option>Business Owner</option>
+                <option>Designer</option>
+                <option>Developer</option>
+                <option>Marketing Team</option>
+                <option>Student</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="promptBox">
+            <span>Extra instruction</span>
+            <textarea id="prompt" name="prompt" rows="5" placeholder="Example: Make it short, extract only table data, suggest improvements, create launch plan..."></textarea>
+          </label>
+
+          <button id="submitBtn" type="submit">Run Gemini Vision Analysis</button>
+        </form>
+      </section>
+
+      <section class="result card" id="resultCard">
+        <div class="resultHeader">
+          <div>
+            <span class="eyebrow">AI Output</span>
+            <h2>Analysis Result</h2>
+          </div>
+          <span id="status">Ready</span>
+        </div>
+        <pre id="result">Select a feature, upload image, and run analysis.</pre>
+        <div class="resultActions">
+          <button id="copyBtn" type="button">Copy Result</button>
+          <button id="downloadBtn" type="button">Download Report</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
