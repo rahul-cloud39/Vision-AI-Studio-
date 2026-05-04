@@ -65,6 +65,18 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.get('/api/env-check', (req, res) => {
+  const safeEnvKeys = Object.keys(process.env)
+    .filter((key) => key.includes('GEMINI') || key.includes('GOOGLE') || key === 'PORT' || key === 'NODE_ENV')
+    .sort();
+
+  res.json({
+    geminiConfigured: Boolean(getGeminiApiKey()),
+    geminiKeyName: getGeminiKeyName(),
+    safeEnvKeys,
+  });
+});
+
 app.get('/api/features', (req, res) => {
   res.json({
     features: Object.keys(featurePrompts),
