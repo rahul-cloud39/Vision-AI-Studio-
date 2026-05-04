@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
+const geminiModelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 const getGeminiApiKey = () => {
   const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || '';
   return key.trim().replace(/^["']|["']$/g, '');
@@ -61,6 +62,7 @@ app.get('/api/health', (req, res) => {
     service: 'Vision AI Studio',
     geminiConfigured: Boolean(geminiApiKey),
     geminiKeyName: getGeminiKeyName(),
+    geminiModel: geminiModelName,
     nodeEnv: process.env.NODE_ENV || 'development',
   });
 });
@@ -110,7 +112,7 @@ app.post('/api/analyze', upload.array('images', 5), async (req, res) => {
       userPrompt ? `Additional user instruction: ${userPrompt}` : '',
     ].filter(Boolean).join('\n');
     const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: geminiModelName });
 
     const result = await model.generateContent([
       prompt,
